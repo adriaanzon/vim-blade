@@ -16,18 +16,12 @@ let s:phpindent = &indentexpr
 let b:did_indent = 1
 
 " Doesn't include 'foreach' and 'forelse' because these already get matched by 'for'.
-let s:directives_start = 'if\|else\|unless\|for\|while\|empty\|push\|section\|can\|hasSection\|verbatim\|php\|' .
-            \ 'component\|slot\|prepend'
-let s:directives_end = 'else\|end\|empty\|show\|stop\|append\|overwrite'
-
-if exists('g:blade_custom_directives_pairs')
-    let s:directives_start .= '\|' . join(keys(g:blade_custom_directives_pairs), '\|')
-    let s:directives_end .= '\|' . join(values(g:blade_custom_directives_pairs), '\|')
-endif
+let s:directives_start = join(blade#start_patterns + blade#middle_patterns, '\|')
+let s:directives_end = join(blade#middle_patterns + blade#end_patterns, '\|')
 
 setlocal autoindent
 setlocal indentexpr=GetBladeIndent()
-exe 'setlocal indentkeys=o,O,<>>,!^F,0=}},0=!!},=@' . substitute(s:directives_end, '\\|', ',=@', 'g')
+exe 'setlocal indentkeys=o,O,<>>,!^F,0=}},0=!!},=@' . join(blade#standard_end_patterns, ',=@')
 
 " Only define the function once.
 if exists('*GetBladeIndent')

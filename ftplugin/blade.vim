@@ -21,12 +21,11 @@ setlocal comments+=s:{{--,m:\ \ \ \ ,e:--}}
 if exists('loaded_matchit') && exists('b:match_words')
     " Append to html matchit words
     let b:match_words .= ',' .
-                \ '@\%(section\s*([^\,]*)\|if\|unless\|foreach\|forelse\|for\|while\|push\|can\|cannot\|hasSection\|' .
-                \     'php\s*(\@!\|verbatim\|component\|slot\|prepend\)' .
+                \ '@\%(section\s*([^\,]*)\|php\s*(\@!\|' . join(blade#standard_start_patterns, '\|') . '\)'.
                 \ ':' .
-                \ '@\%(else\|elseif\|empty\|break\|continue\|elsecan\|elsecannot\)\>' .
+                \ '@\%(' . join(blade#standard_middle_patterns, '\|') . '\)\>' .
                 \ ':' .
-                \ '@\%(end\w\+\|stop\|show\|append\|overwrite\)' .
+                \ '@\%(end\w\+\|' . join(blade#standard_end_patterns, '\|') . '\)' .
                 \ ',{:},\[:\],(:)'
     let b:match_skip = 'synIDattr(synID(line("."), col("."), 0), "name") !=# "bladeKeyword"'
     let b:match_ignorecase = 0

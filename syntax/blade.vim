@@ -29,23 +29,14 @@ syn region  bladeEcho       matchgroup=bladeDelimiter start="@\@<!{{" end="}}"  
 syn region  bladeEcho       matchgroup=bladeDelimiter start="{!!" end="!!}"  contains=@bladePhp,bladePhpParenBlock  containedin=ALLBUT,@bladeExempt keepend
 syn region  bladeComment    matchgroup=bladeDelimiter start="{{--" end="--}}"  contains=bladeTodo  containedin=ALLBUT,@bladeExempt keepend
 
-syn keyword bladeKeyword @if @elseif @foreach @forelse @for @while @can @cannot @elsecan @elsecannot @include
-    \ @includeIf @each @inject @extends @section @stack @push @unless @yield @parent @hasSection @break @continue
-    \ @unset @lang @choice @component @slot @prepend
-    \ nextgroup=bladePhpParenBlock skipwhite containedin=ALLBUT,@bladeExempt
+execute 'syntax keyword bladeKeyword'
+      \ '@' . join(blade#standard_directives_with_parentheses, ' @')
+      \ '@section'
+      \ 'nextgroup=bladePhpParenBlock skipwhite containedin=ALLBUT,@bladeExempt'
 
-syn keyword bladeKeyword @else @endif @endunless @endfor @endforeach @empty @endforelse @endwhile @endcan
-    \ @endcannot @stop @append @endsection @endpush @show @overwrite @verbatim @endverbatim @endcomponent
-    \ @endslot @endprepend
-    \ containedin=ALLBUT,@bladeExempt
-
-if exists('g:blade_custom_directives')
-    exe "syn keyword bladeKeyword @" . join(g:blade_custom_directives, ' @') . " nextgroup=bladePhpParenBlock skipwhite containedin=ALLBUT,@bladeExempt"
-endif
-if exists('g:blade_custom_directives_pairs')
-    exe "syn keyword bladeKeyword @" . join(keys(g:blade_custom_directives_pairs), ' @') . " nextgroup=bladePhpParenBlock skipwhite containedin=ALLBUT,@bladeExempt"
-    exe "syn keyword bladeKeyword @" . join(values(g:blade_custom_directives_pairs), ' @') . " containedin=ALLBUT,@bladeExempt"
-endif
+execute 'syn keyword bladeKeyword'
+      \ '@' . join(blade#standard_directives_without_parentheses, ' @')
+      \ 'containedin=ALLBUT,@bladeExempt'
 
 syn region  bladePhpRegion  matchgroup=bladeKeyword start="\<@php\>\s*(\@!" end="\<@endphp\>"  contains=@bladePhp  containedin=ALLBUT,@bladeExempt keepend
 syn match   bladeKeyword "@php\ze\s*(" nextgroup=bladePhpParenBlock skipwhite containedin=ALLBUT,@bladeExempt
